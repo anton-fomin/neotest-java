@@ -1,6 +1,7 @@
 ---@diagnostic disable: undefined-doc-name, duplicate-doc-field, duplicate-set-field
 
 local File = require("neotest.lib.file")
+local binaries = require("neotest-java.command.binaries")
 
 local file_checker = require("neotest-java.core.file_checker")
 local root_finder = require("neotest-java.core.root_finder")
@@ -32,6 +33,9 @@ NeotestJavaAdapter = {
 	config = {
 		ignore_wrapper = false,
 		junit_jar = vim.fn.stdpath("data") .. "/neotest-java/junit-platform-console-standalone-1.10.1.jar",
+		command = {
+			binaries = binaries,
+		}
 	},
 }
 
