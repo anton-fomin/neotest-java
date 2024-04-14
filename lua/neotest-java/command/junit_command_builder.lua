@@ -1,19 +1,16 @@
 local iter = require("fun").iter
 local build_tools = require("neotest-java.build_tool")
-local binaries = require("neotest-java.command.binaries")
-local javac = binaries.javac
-local java = binaries.java
 
 local stop_command_when_line_containing = function(command, word)
 	return ([=[
-  { %s | while IFS= read -r line; do 
-        echo "$line" 
+  { %s | while IFS= read -r line; do
+        echo "$line"
         if [[ "$line" == *"%s"* ]]; then
             pkill -9 -P $$
             exit
         fi
     done
-  } & 
+  } &
   wait $!
   ]=]):format(command, word)
 end
@@ -25,6 +22,7 @@ local CommandBuilder = {
 	new = function(self, config, project_type)
 		self.__index = self
 		self._junit_jar = config.junit_jar
+		self._binaries = config.command.binaries
 		self._project_type = project_type
 		return setmetatable({}, self)
 	end,
@@ -140,6 +138,8 @@ local CommandBuilder = {
 			test_execution_command,
 		}, " && ")
 
+		local javac = self._binaries.javac
+		local java = self._binaries.java
 		-- replace placeholders
 		local placeholders = {
 			["{{javac}}"] = javac(),
